@@ -15,9 +15,15 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class GaraService {
+    /*
+    Questa annotazione @Autowired viene utilizzata per l'iniezione di dipendenze.
+    Qui viene iniettato un bean di tipo GaraRepo all'interno di questa classe GaraService,
+    consentendo l'utilizzo dei metodi definiti in GaraRepo.
+     */
     @Autowired
     GaraRepo garaRepo;
 
+    //Questo metodo recupera tutte le gare dal repository garaRepo e le trasforma in oggetti GaraDTO, restituendo infine una lista di GaraDTO.
     public List<GaraDTO> getAllGara(){
         List<GaraDTO> garaDTOList=new ArrayList<>();
        for(Gara gara:garaRepo.findAll()){
@@ -26,6 +32,7 @@ public class GaraService {
        return garaDTOList;
     }
 
+    //Questo metodo recupera una gara dal repository garaRepo basata sull'ID fornito e la trasforma in un oggetto GaraDTO.
     public GaraDTO getGaraByID(int id){
         Optional<Gara> garaOptional =garaRepo.findById(id);
         if(!garaOptional.isPresent()){
@@ -36,6 +43,7 @@ public class GaraService {
         return trasformazioneGaraInGaraDTO(gara);
     }
 
+    //Questo metodo crea una nuova gara utilizzando i dati forniti tramite garaDTO, la salva nel repository e restituisce l'oggetto GaraDTO corrispondente.
     public GaraDTO postGara(GaraDTO garaDTO){
         Boolean verifica = garaRepo.existsById(garaDTO.getId());
         if(verifica==true){
@@ -47,6 +55,7 @@ public class GaraService {
         return trasformazioneGaraInGaraDTO(gara);
     }
 
+    //Questo metodo modifica una gara esistente identificata dall'ID fornito con i nuovi dati forniti tramite garaDTO.
 
     public boolean modificaGara(int id, GaraDTO garaDTO){
         Optional<Gara> garaOptional=garaRepo.findById(id);
@@ -63,6 +72,7 @@ public class GaraService {
         return true;
     }
 
+    //Questo metodo elimina una gara dal repository basata sull'ID fornito.
     public boolean deleteGara(int id){
         Optional<Gara> garaOptional=garaRepo.findById(id);
         if(garaOptional.isPresent()){
@@ -73,6 +83,7 @@ public class GaraService {
         }
     }
 
+    //Questo metodo restituisce una lista di gare il cui chilometraggio è uguale o inferiore al valore fornito.
     public List<GaraDTO> getGaraByChilometraggio(int chilometraggio){
         List<Gara>garaList=garaRepo.findAll();
         for(Gara gara:garaList){
@@ -90,31 +101,7 @@ public class GaraService {
         return garaDTOList;
     }
 
-/*
-    public GaraDTO findGaraWithTabella(String codice){
-         Optional<Gara> garaOptional=garaRepo.findGaraByCodice(codice);
-         if(!garaOptional.isPresent()){
-             log.info("la gara con questo codice {} non esiste",codice);
-             return null;
-         }
-
-         GaraDTO garaDTO= trasformazioneGaraInGaraDTO(garaOptional.get());
-         List<PartecipazioneGara> partecipazioneGaraList=partecipazioneGaraRepo.findAllByGara_Id(garaOptional.get().getId());
-         for(PartecipazioneGara partecipazioneGara:partecipazioneGaraList){
-             garaDTO.getPartecipazioneDTOList().add(trasformazionePreparazioneinPreparazioneDTO(partecipazioneGara));
-         }
-         return garaDTO;
-    }
-
- */
-
-
-
-
-
-
-
-
+    //Questo metodo trasforma un oggetto Gara in un oggetto GaraDTO.
 
     public GaraDTO trasformazioneGaraInGaraDTO(Gara gara){
         GaraDTO garaDTO= new GaraDTO(gara.getId(),gara.getCodice(),gara.getDescrizione(),gara.getLunghezzaKm(),gara.getDataSvolgimento());
