@@ -17,11 +17,13 @@ import java.util.Optional;
 @Slf4j
 public class SponsorService {
 
-    // Dipendenza per l'accesso al repository degli sponsor
     @Autowired
     SponsorRepo sponsorRepo;
 
-    // Metodo per ottenere tutti gli sponsor e trasformarli in DTO
+    /**
+     * Metodo per ottenere tutti gli sponsor e trasformarli in DTO
+     * @return List<SponsorDTO>
+     */
     public List<SponsorDTO> getAllSponsor() {
         List<SponsorDTO> sponsorDTOList = new ArrayList<>();
         for(Sponsor sponsor : sponsorRepo.findAll()) {
@@ -30,7 +32,11 @@ public class SponsorService {
         return sponsorDTOList;
     }
 
-    // Metodo per ottenere uno sponsor tramite ID e trasformarlo in DTO
+    /**
+     * Metodo per ottenere uno sponsor tramite ID e trasformarlo in DTO
+     * @param id : identifica lo sponsor che si sta puntando
+     * @return SponsorDTO
+     */
     public SponsorDTO getSponsorByID(int id) {
         Optional<Sponsor> sponsorOptional = sponsorRepo.findById(id);
         if(!sponsorOptional.isPresent()) {
@@ -41,7 +47,11 @@ public class SponsorService {
         return trasformazioneSponsorInSponsorDTO(sponsor);
     }
 
-    // Metodo per creare un nuovo sponsor
+    /**
+     * Metodo per creare un nuovo sponsor
+     * @param sponsorDTO : contiene le informazioni per l'inserimento del nuovo sponsor
+     * @return SponsorDTO
+     */
     public SponsorDTO postSponsor(SponsorDTO sponsorDTO) {
         Boolean aBoolean = sponsorRepo.existsById(sponsorDTO.getId());
         if (aBoolean == true) {
@@ -53,7 +63,12 @@ public class SponsorService {
         return trasformazioneSponsorInSponsorDTO(sponsor);
     }
 
-    // Metodo per modificare uno sponsor esistente
+    /**
+     * Metodo per modificare uno sponsor esistente
+     * @param id : dello sponsor che si sta puntando per la modifica
+     * @param sponsorDTO : SponsorDTO che contiene le informazioni per la modifica
+     * @return boolean : viene ritornato true quando il metodo viene eseguito altrimenti ritorna false
+     */
     public boolean modificaSponsor(int id, SponsorDTO sponsorDTO) {
         Optional<Sponsor> sponsorOptional = sponsorRepo.findById(id);
         if (!sponsorOptional.isPresent()) {
@@ -68,7 +83,11 @@ public class SponsorService {
         return true;
     }
 
-    // Metodo per eliminare uno sponsor tramite ID
+    /**
+     * Metodo per eliminare uno sponsor tramite ID
+     * @param id : dello sponsor che si sta cercando
+     * @return boolean : viene ritornato true quando il metodo viene eseguito altrimenti ritorna false
+     */
     public boolean deleteSponsor(int id) {
         Optional<Sponsor> sponsorOptional = sponsorRepo.findById(id);
         if(sponsorOptional.isPresent()) {
@@ -79,7 +98,11 @@ public class SponsorService {
         }
     }
 
-    // Metodo per trasformare un oggetto Sponsor in un DTO
+    /**
+     * Metodo per trasformare un oggetto Sponsor in un DTO
+     * @param sponsor : lo sponsor da trasformare
+     * @return lo sponsor trasformato in : SponsorDTO
+     */
     public SponsorDTO trasformazioneSponsorInSponsorDTO(Sponsor sponsor) {
         SponsorDTO sponsorDTO = new SponsorDTO(sponsor.getId(), sponsor.getNome(), sponsor.getTipologia(), sponsor.isItaliano());
         return sponsorDTO;

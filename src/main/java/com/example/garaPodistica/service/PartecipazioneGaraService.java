@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PartecipazioneGaraService {
 
-    // Dipendenze per l'accesso ai repository delle partecipazioni alle gare, delle gare e degli atleti
     @Autowired
     PartecipazioneGaraRepo partecipazioneGaraRepo;
     @Autowired
@@ -45,7 +44,10 @@ public class PartecipazioneGaraService {
                 .collect(Collectors.toList());
     }
 
-    // Metodo per ottenere tutte le partecipazioni e trasformarle in DTO
+    /**
+     * Metodo per ottenere tutte le partecipazioni e trasformarle in DTO
+     * @return List<PartecipazioneGaraDTO>
+     */
     public List<PartecipazioneGaraDTO> getAllPartecipazioni() {
         List<PartecipazioneGaraDTO> partecipazioneGaraDTOList = new ArrayList<>();
         for(PartecipazioneGara partecipazioneGara : partecipazioneGaraRepo.findAll()) {
@@ -54,7 +56,11 @@ public class PartecipazioneGaraService {
         return partecipazioneGaraDTOList;
     }
 
-    // Metodo per ottenere una partecipazione tramite ID e trasformarla in DTO
+    /**
+     * Metodo per ottenere una partecipazione tramite ID e trasformarla in DTO
+     * @param id L'ID della gara per la quale si desiderano le informazioni sulla partecipazione.
+     * @return PartecipazioneGaraDTO
+     */
     public PartecipazioneGaraDTO getPartecipazioneByID(int id) {
         Optional<PartecipazioneGara> partecipazioneGaraOptional = partecipazioneGaraRepo.findById(id);
         if(!partecipazioneGaraOptional.isPresent()) {
@@ -65,7 +71,11 @@ public class PartecipazioneGaraService {
         return trasformazionePartecipazioneGarainPartecipazioneGaraDTO(partecipazioneGara);
     }
 
-    // Metodo per creare una nuova partecipazione
+    /**
+     * Metodo per creare una nuova partecipazione
+     * @param partecipazioneGaraDTO : continete le informazioni per l'inserimento della nuova PartecipazioneGara
+     * @return PartecipazioneGaraDTO : contiene le informazioni della PartecipazioneGara inserita
+     */
     public PartecipazioneGaraDTO postPartecipazioni(PartecipazioneGaraDTO partecipazioneGaraDTO) {
         Boolean verifica = partecipazioneGaraRepo.existsById(partecipazioneGaraDTO.getId());
         if(verifica == true) {
@@ -79,7 +89,12 @@ public class PartecipazioneGaraService {
         return trasformazionePartecipazioneGarainPartecipazioneGaraDTO(partecipazioneGara);
     }
 
-    // Metodo per modificare una partecipazione esistente
+    /**
+     * Metodo per modificare una partecipazione esistente
+     * @param id L'ID della gara per la quale si desiderano apportare le modifiche.
+     * @param partecipazioneGaraDTO
+     * @return boolean viene ritornato true quando il metodo viene eseguito altrimenti ritorna false
+     */
     public boolean modificaPartecipazioni(int id, PartecipazioneGaraDTO partecipazioneGaraDTO) {
         PartecipazioneGara partecipazioneGara = partecipazioneGaraRepo.findById(id).orElseThrow(PartecipazioneGaraNotFound::new);
         Atleta atleta = atletaRepo.findById(partecipazioneGaraDTO.getAtletaID()).orElseThrow(AtletaNotFoundExeption::new);
@@ -91,14 +106,22 @@ public class PartecipazioneGaraService {
         return true;
     }
 
-    // Metodo per eliminare una partecipazione tramite ID
+    /**
+     * Metodo per eliminare una partecipazione tramite ID
+     * @param id L'ID della gara per la quale si desidera identificare per l'eliminazione.
+     * @return viene ritornato true quando il metodo viene eseguito altrimenti ritorna false
+     */
     public boolean deletePartecipazioni(int id) {
         PartecipazioneGara partecipazioneGara = partecipazioneGaraRepo.findById(id).orElseThrow(PartecipazioneGaraNotFound::new);
         partecipazioneGaraRepo.deleteById(id);
         return true;
     }
 
-    // Metodo per trasformare un oggetto PartecipazioneGara in un DTO
+    /**
+     * Metodo per trasformare un oggetto PartecipazioneGara in un DTO
+     * @param partecipazioneGara : partecipazioneGara da trasformare in DTO
+     * @return partecipazioneGara viene trasfomato in : partecipazioneGaraDTO
+     */
     public PartecipazioneGaraDTO trasformazionePartecipazioneGarainPartecipazioneGaraDTO(PartecipazioneGara partecipazioneGara) {
         PartecipazioneGaraDTO partecipazioneGaraDTO = new PartecipazioneGaraDTO(partecipazioneGara.getId(), partecipazioneGara.getAtleta().getId(), partecipazioneGara.getGara().getId(), partecipazioneGara.getOrarioArrivo());
         return partecipazioneGaraDTO;

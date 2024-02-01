@@ -17,7 +17,10 @@ public class AtletaService {
     @Autowired
     AtletaRepo atletaRepo;
 
-    // Metodo per ottenere tutti gli atleti
+    /**
+     * Metodo per ottenere tutti gli atleti
+     * @return List<AtletaDTO>
+     */
     public List<AtletaDTO> getAllAtleta() {
         // Inizializza una lista vuota per gli AtletaDTO
         List<AtletaDTO> atletaDTOList = new ArrayList<>();
@@ -34,7 +37,11 @@ public class AtletaService {
         return atletaDTOList;
     }
 
-    // Metodo per trovare un atleta per ID
+    /**
+     * Metodo per trovare un atleta per ID
+     * @param id : identifica l'atleta che si sta puntando
+     * @return AtletaDTO
+     */
     public AtletaDTO findAtletaByID(int id) {
         // Cerca un atleta nel repository tramite ID
         Optional<Atleta> atletaOptional = atletaRepo.findById(id);
@@ -50,7 +57,11 @@ public class AtletaService {
         return trasformazioneAtletaDTOInAtleta(atleta);
     }
 
-    // Metodo per aggiungere un nuovo atleta
+    /**
+     * Metodo per aggiungere un nuovo atleta
+     * @param atletaDTO : contiene le informazioni per l'inserimento dell'atleta
+     * @return AtletaDTO
+     */
     public AtletaDTO postAtleta(AtletaDTO atletaDTO) {
         // Verifica se l'atleta esiste già nel repository
         Boolean aBoolean = atletaRepo.existsById(atletaDTO.getId());
@@ -69,7 +80,12 @@ public class AtletaService {
         return trasformazioneAtletaDTOInAtleta(atleta);
     }
 
-    // Metodo per modificare un atleta esistente
+    /**
+     * Metodo per modificare un atleta esistente
+     * @param id : identifica l'atleta che si sta puntando
+     * @param atletaDTO : contiene le informazioni per la modifica dell'atleta
+     * @return boolean viene ritornato true quando il metodo viene eseguito altrimenti ritorna false
+     */
     public boolean modificaAtleta(int id, AtletaDTO atletaDTO) {
         // Cerca l'atleta nel repository tramite ID
         Optional<Atleta> atletaOptional = atletaRepo.findById(id);
@@ -112,9 +128,10 @@ public class AtletaService {
 
     /**
      * Metodo per calcolare le statistiche sulla frequenza delle città degli atleti
+     * @return List<RigaTabellaAtletiDTO>
      */
     public List<RigaTabellaAtletiDTO> findStatistica() {
-        // Recupera tutti gli atleti dal repository
+        //Recupera tutti gli atleti dal repository
         List<Atleta> listaAtleti = atletaRepo.findAll();
 
         // Inizializza una mappa per tenere traccia del conteggio degli atleti per città
@@ -147,7 +164,11 @@ public class AtletaService {
         return listaFrequenzeCittaDTO;
     }
 
-    // Metodo per trasformare l'alteta in AtletaDTO per il ritorno nel controller
+    /**
+     * Metodo per trasformare l'alteta in AtletaDTO per il ritorno nel controller
+     * @param atleta : atleta da trasformare
+     * @return atleta trasformato in : AtletaDTO
+     */
     public AtletaDTO trasformazioneAtletaDTOInAtleta(Atleta atleta){
         AtletaDTO atletaDTO= new AtletaDTO(atleta.getId(),atleta.getNome(),atleta.getCognome(),atleta.getCitta());
         return atletaDTO;
