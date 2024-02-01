@@ -6,4 +6,4 @@ Il progetto è stato implementato in Java versione 17 e, in particolare, è stat
 
 Le entita sono persistite su un database mySQL e in Java sono state modellate mediante l'utilizzo dell'Entity Manager. Sono state utilizzate le annotazioni Spring-Data-JPA; mentre la parte rest è stata sviluppata mediante l'utilizzo di Spring-boot-starter-web.
 
-Infine è stata utilizzata l'estensione Lombok per evitare il codice statico dei Getter e Setter e dei Costruttori.
+Per migliorare la leggibilità del codice e ridurre la sua verbosità, è stata integrata l'estensione Lombok, che automatizza la generazione di getter, setter e costruttori.
