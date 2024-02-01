@@ -63,15 +63,6 @@ public class AtletaService {
      * @return AtletaDTO
      */
     public AtletaDTO postAtleta(AtletaDTO atletaDTO) {
-        // Verifica se l'atleta esiste già nel repository
-        Boolean aBoolean = atletaRepo.existsById(atletaDTO.getId());
-
-        // Se l'atleta esiste già, restituisci null
-        if (aBoolean == true) {
-            log.info("È stato trovato già questo atleta");
-            return null;
-        }
-
         // Crea un nuovo atleta utilizzando i dati forniti e salvalo nel repository
         Atleta atleta = new Atleta(atletaDTO.getNome(), atletaDTO.getCognome(), atletaDTO.getCitta());
         atleta = atletaRepo.save(atleta);
@@ -93,9 +84,8 @@ public class AtletaService {
         // Se l'atleta non viene trovato, restituisci false
         if (!atletaOptional.isPresent()) {
             log.info("Non è stato trovato l'atleta con questo id {}", id);
-            return false;
+            throw new AtletaNotFoundExeption("l'atleta con id "+ id + "non è presente");
         }
-
         // Modifica l'atleta con i nuovi dati forniti
         Atleta atleta = atletaOptional.get();
         atleta.setNome(atletaDTO.getNome());
@@ -118,9 +108,8 @@ public class AtletaService {
 
         // Se l'atleta non viene trovato, restituisci false
         if (!atletaOptional.isPresent()) {
-            return false;
+            throw new AtletaNotFoundExeption("l'atleta con id "+ id + "non è presente");
         }
-
         // Se l'atleta viene trovato, elimina l'atleta dal repository
         atletaRepo.deleteById(id);
         return true;

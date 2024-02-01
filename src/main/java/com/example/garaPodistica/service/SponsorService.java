@@ -2,6 +2,7 @@ package com.example.garaPodistica.service;
 
 import com.example.garaPodistica.controller.dto.AtletaDTO;
 import com.example.garaPodistica.controller.dto.SponsorDTO;
+import com.example.garaPodistica.exeptions.SponsorNotFoundExeption;
 import com.example.garaPodistica.modello.Atleta;
 import com.example.garaPodistica.modello.Sponsor;
 import com.example.garaPodistica.repository.SponsorRepo;
@@ -41,7 +42,7 @@ public class SponsorService {
         Optional<Sponsor> sponsorOptional = sponsorRepo.findById(id);
         if(!sponsorOptional.isPresent()) {
             log.info("non è stato trovato lo sponsor con questo id");
-            return null;
+            throw new SponsorNotFoundExeption("lo spondor con id "+id+" non è presente");
         }
         Sponsor sponsor = sponsorOptional.get();
         return trasformazioneSponsorInSponsorDTO(sponsor);
@@ -53,11 +54,6 @@ public class SponsorService {
      * @return SponsorDTO
      */
     public SponsorDTO postSponsor(SponsorDTO sponsorDTO) {
-        Boolean aBoolean = sponsorRepo.existsById(sponsorDTO.getId());
-        if (aBoolean == true) {
-            log.info("è stato trovato già lo sponsor con questo id");
-            return null;
-        }
         Sponsor sponsor = new Sponsor(sponsorDTO.getNome(), sponsorDTO.getTipologia(), sponsorDTO.isItaliano());
         sponsor = sponsorRepo.save(sponsor);
         return trasformazioneSponsorInSponsorDTO(sponsor);
@@ -73,7 +69,7 @@ public class SponsorService {
         Optional<Sponsor> sponsorOptional = sponsorRepo.findById(id);
         if (!sponsorOptional.isPresent()) {
             log.info("non è stato trovato lo sponsor da modificare con id {}", id);
-            return false;
+            throw new SponsorNotFoundExeption("non è presente lo sponsor con id :" +id);
         }
         Sponsor sponsor = sponsorOptional.get();
         sponsor.setNome(sponsorDTO.getNome());
@@ -94,7 +90,7 @@ public class SponsorService {
             sponsorRepo.deleteById(id);
             return true;
         } else {
-            return false;
+            throw new SponsorNotFoundExeption("non è presente lo sponsor con id :"+id);
         }
     }
 

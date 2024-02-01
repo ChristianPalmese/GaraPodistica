@@ -2,6 +2,7 @@ package com.example.garaPodistica.service;
 
 import com.example.garaPodistica.controller.dto.GaraDTO;
 import com.example.garaPodistica.exeptions.GaraCodiceExeption;
+import com.example.garaPodistica.exeptions.GaraNotFoundExeption;
 import com.example.garaPodistica.modello.Gara;
 import com.example.garaPodistica.repository.GaraRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class GaraService {
         Optional<Gara> garaOptional =garaRepo.findById(id);
         if(!garaOptional.isPresent()){
             log.info("non è presente nessuna gara con questo id {}",id);
-            return null;
+            throw new GaraNotFoundExeption("la gara con id "+ id + "non è presente");
         }
         Gara gara=garaOptional.get();
         return trasformazioneGaraInGaraDTO(gara);
@@ -52,11 +53,6 @@ public class GaraService {
      * @return GaraDTO
      */
     public GaraDTO postGara(GaraDTO garaDTO){
-        Boolean verifica = garaRepo.existsById(garaDTO.getId());
-        if(verifica==true){
-            log.info("la gara gia è esistente con questo id");
-            throw new GaraCodiceExeption("la gara con questo id "+garaDTO.getId()+" non è stata trovata");
-        }
         Gara gara = new Gara(garaDTO.getCodice(),garaDTO.getDescrizione(),garaDTO.getLunghezzaKm(),garaDTO.getDataSvolgimento());
         gara=garaRepo.save(gara);
         return trasformazioneGaraInGaraDTO(gara);
@@ -73,7 +69,7 @@ public class GaraService {
         Optional<Gara> garaOptional=garaRepo.findById(id);
         if (!garaOptional.isPresent()){
             log.info("la gara con questo id non è presente");
-            return false;
+            throw new GaraNotFoundExeption("la gara con id " + id + "non è presente" );
         }
         Gara gara= garaOptional.get();
         gara.setCodice(gara.getCodice());
@@ -95,7 +91,7 @@ public class GaraService {
             garaRepo.deleteById(id);
             return true;
         }else{
-            return false;
+            throw new GaraNotFoundExeption("la gara con id" +id+ "non è presente");
         }
     }
 
@@ -126,7 +122,6 @@ public class GaraService {
      * @param gara : la gara da trasformare
      * @return gara trasformato in : garaDTO
      */
-
     public GaraDTO trasformazioneGaraInGaraDTO(Gara gara){
         GaraDTO garaDTO= new GaraDTO(gara.getId(),gara.getCodice(),gara.getDescrizione(),gara.getLunghezzaKm(),gara.getDataSvolgimento());
         return garaDTO;

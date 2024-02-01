@@ -65,7 +65,7 @@ public class PartecipazioneGaraService {
         Optional<PartecipazioneGara> partecipazioneGaraOptional = partecipazioneGaraRepo.findById(id);
         if(!partecipazioneGaraOptional.isPresent()) {
             log.info("non è presente nessuna partecipazione con questo id {}", id);
-            return null;
+            throw new PartecipazioneGaraNotFound("la partecipazione con id " +id+ "non è presente");
         }
         PartecipazioneGara partecipazioneGara = partecipazioneGaraOptional.get();
         return trasformazionePartecipazioneGarainPartecipazioneGaraDTO(partecipazioneGara);
@@ -77,11 +77,6 @@ public class PartecipazioneGaraService {
      * @return PartecipazioneGaraDTO : contiene le informazioni della PartecipazioneGara inserita
      */
     public PartecipazioneGaraDTO postPartecipazioni(PartecipazioneGaraDTO partecipazioneGaraDTO) {
-        Boolean verifica = partecipazioneGaraRepo.existsById(partecipazioneGaraDTO.getId());
-        if(verifica == true) {
-            log.info("la partecipazione già esiste con questo id");
-            throw new GaraCodiceExeption("la gara con questo id " + partecipazioneGaraDTO.getId() + " non è stata trovata");
-        }
         Atleta atleta = atletaRepo.findById(partecipazioneGaraDTO.getAtletaID()).orElseThrow(AtletaNotFoundExeption::new);
         Gara gara = garaRepo.findById(partecipazioneGaraDTO.getGaraID()).orElseThrow(GaraNotFoundExeption::new);
         PartecipazioneGara partecipazioneGara = new PartecipazioneGara(atleta, gara, partecipazioneGaraDTO.getOrarioArrivo());
